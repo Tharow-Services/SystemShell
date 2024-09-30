@@ -1,0 +1,48 @@
+//
+// SPDX-FileCopyrightText: 2020 The Calyx Institute
+// SPDX-License-Identifier: Apache-2.0
+// SYNC TRIGGER [9]
+
+android_app {
+    name: "SystemShell",
+    srcs: [
+        "app/src/main/java/**/*.java",
+    ],
+    resource_dirs: [
+        "app/src/main/res",
+    ],
+    static_libs: [
+        "androidx.core_core-ktx",
+        "androidx.fragment_fragment-ktx",
+        "androidx.activity_activity-ktx",
+        "androidx.preference_preference",
+        "androidx.documentfile_documentfile",
+        "androidx.work_work-runtime-ktx",
+        "androidx.lifecycle_lifecycle-viewmodel-ktx",
+        "androidx.lifecycle_lifecycle-livedata-ktx",
+        "androidx-constraintlayout_constraintlayout",
+        "com.google.android.material_material",
+    ],
+    manifest: "app/src/main/AndroidManifest.xml",
+
+    platform_apis: true,
+    system_ext_specific: true,
+    certificate: "platform",
+    privileged: true,
+    required: [
+        "net.tharow.systemshell_allowlist",
+    ],
+    optimize: {
+        enabled: true,
+    },
+}
+
+prebuilt_etc {
+    name: "net.tharow.systemshell_allowlist",
+    system_ext_specific: true,
+    sub_dir: "sysconfig",
+    src: "allowlist_net.tharow.systemshell.xml",
+    filename_from_src: true,
+}
+
+
