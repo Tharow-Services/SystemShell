@@ -1,7 +1,7 @@
 //
 // SPDX-FileCopyrightText: 2020 The Calyx Institute
 // SPDX-License-Identifier: Apache-2.0
-// SYNC TRIGGER [9]
+// SYNC TRIGGER [10]
 
 android_app {
     name: "SystemShell",

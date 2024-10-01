@@ -19,7 +19,7 @@ import android.util.Log;
 import java.io.IOException;
 
 public class CommandReceiver extends BroadcastReceiver {
-    private static final String TAG = "SYSCOMReceiver";
+    private static final String TAG = "net.tharow.cmdrec";
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "received intent: " + intent.toUri(Intent.URI_INTENT_SCHEME));

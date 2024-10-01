@@ -10,22 +10,21 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class ShellActivity extends Activity {
     private static final String TAG = ShellActivity.class.getSimpleName();
 
-    private static final int port = 9999;
 
     private ScrollView mScrollView;
     private TextView mTermOutput;
     private EditText mInputField;
 
-    private Socket mSocket;
+    private Process mProcess;
     private OutputStream mOutStream;
     private InputStream mInStream;
 
@@ -46,6 +45,8 @@ public class ShellActivity extends Activity {
             }
             return false;
         });
+
+        AsyncTask.execute(new ConnectTask());
     }
 
     private void sendCommand(String command) {
@@ -60,13 +61,17 @@ public class ShellActivity extends Activity {
     private class ConnectTask implements Runnable {
         @Override
         public void run() {
-            try (ServerSocket ss = new ServerSocket(port)) {
-                mSocket = ss.accept();
-                mOutStream = mSocket.getOutputStream();
-                mInStream = mSocket.getInputStream();
-                startReaderThread();
+            try {
+                ProcessBuilder b = new ProcessBuilder("/system/bin/sh","-i");
+                b.redirectErrorStream(true);
+                b.directory(new File("/"));
+                mProcess = b.start();
+                mOutStream = new BufferedOutputStream(mProcess.getOutputStream());
+                mInStream = mProcess.getInputStream();
+
+                startReaderThread(mInStream);
             } catch (IOException e) {
-                Log.e(TAG, "error connecting to shell!", e);
+                Log.e(TAG, "error starting shell!", e);
             }
         }
     }
@@ -88,12 +93,12 @@ public class ShellActivity extends Activity {
         }
     }
 
-    private void startReaderThread() {
+    private void startReaderThread(InputStream in) {
         new Thread(() -> {
             try {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
-                while ((bytesRead = mInStream.read(buffer)) != -1) {
+                while ((bytesRead = in.read(buffer)) != -1) {
                     String output = new String(buffer, 0, bytesRead);
                     runOnUiThread(() -> {
                         appendOutput(output);
@@ -111,8 +116,8 @@ public class ShellActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         try {
-            if (mSocket != null) {
-                mSocket.close();
+            if (mProcess != null) {
+                mProcess.destroy();
             }
             if (mOutStream != null) {
                 mOutStream.close();
