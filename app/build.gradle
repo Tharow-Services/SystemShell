@@ -3,6 +3,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('dev_keystore.jks')
+            storePassword 'kJCp!Bda#PBdN2RLK%yMK@hatq&69E'
+            keyPassword 'kJCp!Bda#PBdN2RLK%yMK@hatq&69E'
+            keyAlias 'key0'
+        }
+    }
     namespace 'net.tharow.systemshell'
     compileSdk 34
 
@@ -10,8 +18,8 @@ android {
         applicationId "net.tharow.systemshell"
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode 14
+        versionName "14"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

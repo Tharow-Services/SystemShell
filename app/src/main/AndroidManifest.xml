@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:sharedUserId="@string/sharedId">
+    android:sharedUserId="android.uid.system"
+    package="net.tharow.systemshell">
 
     <permission
         android:name="net.tharow.permission.SYSTEM_COMMAND"
         android:icon="@drawable/ic_system_command"
         android:label="@string/permission_label"
         android:description="@string/permission_description"
-        android:protectionLevel="signature|privileged|dangerous"/>
+        android:protectionLevel="dangerous"/>
 
     <permission android:name="net.tharow.permission.SELF" android:protectionLevel="signature"/>
     <uses-permission android:name="net.tharow.permission.SELF"/>
@@ -25,7 +26,7 @@
         android:directBootAware="true"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ShellActivity"
             android:exported="true"
             android:theme="@style/Theme.SystemShell">
             <intent-filter>

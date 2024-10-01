@@ -11,9 +11,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 public class ShellActivity extends Activity {
@@ -62,13 +64,12 @@ public class ShellActivity extends Activity {
         @Override
         public void run() {
             try {
-                ProcessBuilder b = new ProcessBuilder("/system/bin/sh","-i");
+                ProcessBuilder b = new ProcessBuilder("/system/bin/sh", "-i");
                 b.redirectErrorStream(true);
                 b.directory(new File("/"));
                 mProcess = b.start();
-                mOutStream = new BufferedOutputStream(mProcess.getOutputStream());
+                mOutStream = mProcess.getOutputStream();
                 mInStream = mProcess.getInputStream();
-
                 startReaderThread(mInStream);
             } catch (IOException e) {
                 Log.e(TAG, "error starting shell!", e);
@@ -87,6 +88,7 @@ public class ShellActivity extends Activity {
         public void run() {
             try {
                 mOutStream.write(cmd.getBytes());
+                mOutStream.flush();
             } catch (IOException e) {
                 Log.e(TAG, "error running command!", e);
             }
